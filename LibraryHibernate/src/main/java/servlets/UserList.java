@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,9 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import appSpecs.AppSettings;
-import appSpecs.DBServices;
-import entities.Book;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import entities.User;
 
 /**
@@ -44,17 +44,21 @@ public class UserList extends HttpServlet {
 			response.sendRedirect("index.jsp");
 		else
 		{
-			DBServices services = new DBServices();
-			List <User> users = new ArrayList<User>(); 
-			users = services.selectUser();
-			if(request.getParameter("delete") != null){
-				services.deleteUserById(Integer.parseInt(request.getParameter("delete")));
-				response.sendRedirect("userlist");				
+			
+			if(request.getParameter("delete") != null){			
+				SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+				Session hsession = sessionFactory.openSession();
+				hsession.beginTransaction();
+				User delUser = hsession.get(User.class, Integer.parseInt(request.getParameter("delete")));
+				hsession.delete(delUser);
+				hsession.getTransaction().commit();
+				hsession.close();
+				sessionFactory.close();			
 			}
-			else{
-				request.setAttribute("users", users);
-				request.getRequestDispatcher("allusers.jsp").forward(request, response);
-			}
+			List <User> users =  User.getAll(); 
+			request.setAttribute("users", users);
+			request.getRequestDispatcher("allusers.jsp").forward(request, response);
+		
 		}
 	}
 

@@ -39,8 +39,8 @@
 			<tbody>
 				<c:forEach var="obj" varStatus="status" items="${trans}">
 						<tr>
-							<td>${obj.username}</td>
-							<td>${obj.booktitle}</td>
+							<td>${obj.user.name}</td>
+							<td>${obj.book.title}</td>
 							<td>${obj.dateOfBorrow}</td>
 							<td>${obj.expectedDateOfReturn}</td>
 							<td>${obj.dateOfReturn}</td>

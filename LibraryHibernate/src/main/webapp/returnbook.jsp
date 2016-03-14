@@ -46,8 +46,8 @@
 						<c:forEach var="obj" varStatus="status" items="${trans}">
 								<tr>
 									<td><input type="checkbox" name="receive" value="${obj.id}"></td>
-									<td>${obj.username}</td>
-									<td>${obj.booktitle}</td>
+									<td>${obj.user.name}</td>
+									<td>${obj.book.title}</td>
 									<td>${obj.dateOfBorrow}</td>
 									<td>${obj.expectedDateOfReturn}</td>
 								</tr>

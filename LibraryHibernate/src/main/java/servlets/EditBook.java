@@ -1,8 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import appSpecs.AppSettings;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import appSpecs.DBServices;
 import entities.Book;
 import entities.User;
@@ -42,8 +43,7 @@ public class EditBook extends HttpServlet {
 			response.sendRedirect("index.jsp");
 		else
 		{
-			DBServices services = new DBServices();
-			Book book = services.selectBookById(Integer.parseInt(request.getParameter("id")));
+			Book book = Book.getBook(Integer.parseInt(request.getParameter("id")));
 			request.setAttribute("book", book);
 			request.getRequestDispatcher("editbooks.jsp").forward(request, response);
 		}
@@ -54,12 +54,19 @@ public class EditBook extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		DBServices services = new DBServices();
-		services.updateBookById(Integer.parseInt(request.getParameter("id")),
-				request.getParameter("title"),
-				request.getParameter("author"),
-				request.getParameter("isbn"),
-				request.getParameter("state"));
+
+		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+		Session hsession = sessionFactory.openSession();
+		hsession.beginTransaction();
+		Book book = hsession.get(Book.class, Integer.parseInt(request.getParameter("id")));
+		book.setAuthor(request.getParameter("author"));
+		book.setTitle(request.getParameter("title"));
+		book.setIsbn(request.getParameter("isbn"));
+		book.setState(request.getParameter("state"));
+		hsession.getTransaction().commit();
+		hsession.close();
+		sessionFactory.close();	
+		
 		response.sendRedirect("booklist");
 	
 	}

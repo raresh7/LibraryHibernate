@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import appSpecs.DBServices;
 import entities.Transaction;
 import entities.User;
 
@@ -41,19 +39,17 @@ public class LentBooks extends HttpServlet {
 			response.sendRedirect("index.jsp");
 		else
 		{
-			DBServices services = new DBServices();
 			if(request.getParameter("delete") != null){
-				services.deleteTransById(Integer.parseInt(request.getParameter("delete")));
-				response.sendRedirect("lentbooks");
+				System.out.println(request.getParameter("delete"));
+				Transaction.deleteTransaction(Integer.parseInt(request.getParameter("delete")));
 			}
-			else{
-				List <Transaction> trans = new ArrayList<Transaction>();
-				trans = services.selectTrans();
+			
+				List <Transaction> trans = Transaction.getAll();
 				request.setAttribute("trans", trans);
 				request.getRequestDispatcher("lentbooks.jsp").forward(request, response);
-			}
-		}
+			}	
 	}
+	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

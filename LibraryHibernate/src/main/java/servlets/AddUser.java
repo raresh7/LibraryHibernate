@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import appSpecs.DBServices;
 import entities.User;
 
@@ -45,12 +49,19 @@ public class AddUser extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//System.out.println(request.getParamete("isAdmin")[0].equals("true")==true);
-		DBServices services = new DBServices();
-		services.insertUser(	request.getParameter("name"),
+		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+
+		User user = new User(request.getParameter("name"),
 				request.getParameter("ssn"),
 				request.getParameter("address"),
 				request.getParameter("isAdmin") != null? true : false
 				);
+		session.save(user);
+		session.getTransaction().commit();
+		session.close();
+		sessionFactory.close();	
 		response.sendRedirect("newuser.jsp");
 	}
 

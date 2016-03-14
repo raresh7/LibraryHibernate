@@ -11,7 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import appSpecs.AppSettings;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import appSpecs.DBServices;
 import entities.Book;
 import entities.User;
@@ -43,18 +46,20 @@ public class BookList extends HttpServlet {
 			response.sendRedirect("index.jsp");
 		else
 		{
-			DBServices services = new DBServices();
-			List <Book> books = new ArrayList<Book>(); 
-			books = services.selectAllBooks();
-			if(request.getParameter("delete") != null){
-				services.deleteBookById(Integer.parseInt(request.getParameter("delete")));
-				//request.getRequestDispatcher("allbooks.jsp").forward(request, response);
-				response.sendRedirect("booklist");
+			if(request.getParameter("delete") != null){			
+				SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+				Session hsession = sessionFactory.openSession();
+				hsession.beginTransaction();
+				Book delBook = hsession.get(Book.class, Integer.parseInt(request.getParameter("delete")));
+				hsession.delete(delBook);
+				hsession.getTransaction().commit();
+				hsession.close();
+				sessionFactory.close();			
 			}
-			else{
-				request.setAttribute("books", books);
-				request.getRequestDispatcher("allbooks.jsp").forward(request, response);
-				}
+			List <Book> books =  Book.getAll(); 
+			request.setAttribute("books", books);
+			request.getRequestDispatcher("allbooks.jsp").forward(request, response);
+		
 		}
 	}
 

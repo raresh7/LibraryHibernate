@@ -31,72 +31,72 @@ public class DBServices implements IDBOperations{
 		}
 	}
 
-	@Override
-	public ArrayList<Book> selectAllBooks(){
-		try{
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM book");
-			ArrayList <Book> books = new ArrayList<Book>();
-			while(rs.next()){
-				Book fetchedBook = new Book(rs.getString("title"), rs.getString("author"), rs.getString("isbn"), rs.getString("state"), rs.getInt("id"));
-				books.add(fetchedBook);
-			}
-			stmt.close();
-			return books;
-		}catch(Exception e){
-			System.err.println(e);
-		}
-		return null;
-	}
-	public ArrayList<Book> selectAllBooksAvailable(){
-		try{
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM book WHERE id NOT IN (SELECT bookid FROM transaction WHERE dateofreturn is null)");
-			ArrayList <Book> books = new ArrayList<Book>();
-			while(rs.next()){
-				Book fetchedBook = new Book(rs.getString("title"), rs.getString("author"), rs.getString("isbn"), rs.getString("state"), rs.getInt("id"));
-				books.add(fetchedBook);
-			}
-			stmt.close();
-			return books;
-		}catch(Exception e){
-			System.err.println(e);
-		}
-		return null;
-	}
-	@Override
-	public Book selectBookById(int id){
-		try{
-			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM book WHERE id =?");
-			stmt.setInt(1, id);
-			ResultSet rs = stmt.executeQuery();
-			if(rs.next()){
-				Book book = new Book(rs.getString("title"), rs.getString("author"), rs.getString("isbn"), rs.getString("state"), rs.getInt("id"));
-				rs.close();
-				stmt.close();
-				return book;
-			}
-			else{
-				rs.close();
-				stmt.close();
-			}
-			
-		}catch(Exception e){
-			System.err.println(e);
-		}
-		return null;
-	}
+//	@Override
+//	public ArrayList<Book> selectAllBooks(){
+//		try{
+//			Statement stmt = conn.createStatement();
+//			ResultSet rs = stmt.executeQuery("SELECT * FROM book");
+//			ArrayList <Book> books = new ArrayList<Book>();
+//			while(rs.next()){
+//				Book fetchedBook = new Book(rs.getString("title"), rs.getString("author"), rs.getString("isbn"), rs.getString("state"), rs.getInt("id"));
+//				books.add(fetchedBook);
+//			}
+//			stmt.close();
+//			return books;
+//		}catch(Exception e){
+//			System.err.println(e);
+//		}
+//		return null;
+//	}
+//	public ArrayList<Book> selectAllBooksAvailable(){
+//		try{
+//			Statement stmt = conn.createStatement();
+//			ResultSet rs = stmt.executeQuery("SELECT * FROM book WHERE id NOT IN (SELECT bookid FROM transaction WHERE dateofreturn is null)");
+//			ArrayList <Book> books = new ArrayList<Book>();
+//			while(rs.next()){
+//				Book fetchedBook = new Book(rs.getString("title"), rs.getString("author"), rs.getString("isbn"), rs.getString("state"), rs.getInt("id"));
+//				books.add(fetchedBook);
+//			}
+//			stmt.close();
+//			return books;
+//		}catch(Exception e){
+//			System.err.println(e);
+//		}
+//		return null;
+//	}
+//	@Override
+//	public Book selectBookById(int id){
+//		try{
+//			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM book WHERE id =?");
+//			stmt.setInt(1, id);
+//			ResultSet rs = stmt.executeQuery();
+//			if(rs.next()){
+//				Book book = new Book(rs.getString("title"), rs.getString("author"), rs.getString("isbn"), rs.getString("state"), rs.getInt("id"));
+//				rs.close();
+//				stmt.close();
+//				return book;
+//			}
+//			else{
+//				rs.close();
+//				stmt.close();
+//			}
+//			
+//		}catch(Exception e){
+//			System.err.println(e);
+//		}
+//		return null;
+//	}
 	
-	public void deleteBookById(int id){
-		try{
-			PreparedStatement stmt = conn.prepareStatement("DELETE FROM book WHERE id =?");
-			stmt.setInt(1, id);
-			stmt.execute();
-			stmt.close();
-		}catch(Exception e){
-			System.err.println(e);
-		}
-	}
+//	public void deleteBookById(int id){
+//		try{
+//			PreparedStatement stmt = conn.prepareStatement("DELETE FROM book WHERE id =?");
+//			stmt.setInt(1, id);
+//			stmt.execute();
+//			stmt.close();
+//		}catch(Exception e){
+//			System.err.println(e);
+//		}
+//	}
 	@Override
 	public ArrayList<User> selectUser(){
 		try{
@@ -258,15 +258,15 @@ public class DBServices implements IDBOperations{
 			ArrayList <Transaction> trans = new ArrayList<Transaction>();
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd");
 			while(rs.next()){
-				Transaction fetchedTrans = new Transaction(	rs.getInt("userid"),
-															rs.getInt("bookid"),
-															LocalDate.parse(rs.getString("dateofborrow"), format),
-															LocalDate.parse(rs.getString("expecteddateofreturn"), format),
-															rs.getString("dateofreturn") != null? LocalDate.parse(rs.getString("dateofreturn"), format) : null,
-															rs.getInt("id"),
-															rs.getString("booktitle"),
-															rs.getString("username"));
-				trans.add(fetchedTrans);
+//				Transaction fetchedTrans = new Transaction(	rs.getInt("userid"),
+//															rs.getInt("bookid"),
+//															LocalDate.parse(rs.getString("dateofborrow"), format),
+//															LocalDate.parse(rs.getString("expecteddateofreturn"), format),
+//															rs.getString("dateofreturn") != null? LocalDate.parse(rs.getString("dateofreturn"), format) : null,
+//															rs.getInt("id"),
+//															rs.getString("booktitle"),
+//															rs.getString("username"));
+//				trans.add(fetchedTrans);
 			}
 			stmt.close();
 			return trans;
@@ -289,15 +289,15 @@ public class DBServices implements IDBOperations{
 			ArrayList <Transaction> trans = new ArrayList<Transaction>();
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd");
 			while(rs.next()){
-				Transaction fetchedTrans = new Transaction(	rs.getInt("userid"),
-															rs.getInt("bookid"),
-															LocalDate.parse(rs.getString("dateofborrow"), format),
-															LocalDate.parse(rs.getString("expecteddateofreturn"), format),
-															rs.getString("dateofreturn") != null? LocalDate.parse(rs.getString("dateofreturn"), format) : null,
-															rs.getInt("id"),
-															rs.getString("booktitle"),
-															rs.getString("username"));
-				trans.add(fetchedTrans);
+//				Transaction fetchedTrans = new Transaction(	rs.getInt("userid"),
+//															rs.getInt("bookid"),
+//															LocalDate.parse(rs.getString("dateofborrow"), format),
+//															LocalDate.parse(rs.getString("expecteddateofreturn"), format),
+//															rs.getString("dateofreturn") != null? LocalDate.parse(rs.getString("dateofreturn"), format) : null,
+//															rs.getInt("id"),
+//															rs.getString("booktitle"),
+//															rs.getString("username"));
+//				trans.add(fetchedTrans);
 			}
 			stmt.close();
 			return trans;
@@ -320,15 +320,15 @@ public class DBServices implements IDBOperations{
 			ArrayList <Transaction> trans = new ArrayList<Transaction>();
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd");
 			while(rs.next()){
-				Transaction fetchedTrans = new Transaction(	rs.getInt("userid"),
-															rs.getInt("bookid"),
-															LocalDate.parse(rs.getString("dateofborrow"), format),
-															LocalDate.parse(rs.getString("expecteddateofreturn"), format),
-															rs.getString("dateofreturn") != null? LocalDate.parse(rs.getString("dateofreturn"), format) : null,
-															rs.getInt("id"),
-															rs.getString("booktitle"),
-															rs.getString("username"));
-				trans.add(fetchedTrans);
+//				Transaction fetchedTrans = new Transaction(	rs.getInt("userid"),
+//															rs.getInt("bookid"),
+//															LocalDate.parse(rs.getString("dateofborrow"), format),
+//															LocalDate.parse(rs.getString("expecteddateofreturn"), format),
+//															rs.getString("dateofreturn") != null? LocalDate.parse(rs.getString("dateofreturn"), format) : null,
+//															rs.getInt("id"),
+//															rs.getString("booktitle"),
+//															rs.getString("username"));
+//				trans.add(fetchedTrans);
 			}
 			stmt.close();
 			return trans;
@@ -349,15 +349,15 @@ public class DBServices implements IDBOperations{
 			ArrayList <Transaction> trans = new ArrayList<Transaction>();
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd");
 			while(rs.next()){
-				Transaction fetchedTrans = new Transaction(	rs.getInt("userid"),
-															rs.getInt("bookid"),
-															LocalDate.parse(rs.getString("dateofborrow"), format),
-															LocalDate.parse(rs.getString("expecteddateofreturn"), format),
-															((rs.getString("dateofreturn") == null)? null : (LocalDate.parse(rs.getString("dateofreturn"), format))),
-															rs.getInt("id"),
-															rs.getString("booktitle"),
-															rs.getString("username"));
-				trans.add(fetchedTrans);
+//				Transaction fetchedTrans = new Transaction(	rs.getInt("userid"),
+//															rs.getInt("bookid"),
+//															LocalDate.parse(rs.getString("dateofborrow"), format),
+//															LocalDate.parse(rs.getString("expecteddateofreturn"), format),
+//															((rs.getString("dateofreturn") == null)? null : (LocalDate.parse(rs.getString("dateofreturn"), format))),
+//															rs.getInt("id"),
+//															rs.getString("booktitle"),
+//															rs.getString("username"));
+//				trans.add(fetchedTrans);
 			}
 			stmt.close();
 			return trans;
@@ -430,17 +430,17 @@ public class DBServices implements IDBOperations{
 			ResultSet rs = stmt.executeQuery();
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyy-MM-dd");
 			if(rs.next()){
-				Transaction fetchedTrans = new Transaction(	rs.getInt("userid"),
-							rs.getInt("bookid"),
-							LocalDate.parse(rs.getString("dateofborrow"), format),
-							LocalDate.parse(rs.getString("expecteddateofreturn"), format),
-							rs.getString("dateofreturn") != null? LocalDate.parse(rs.getString("dateofreturn"), format) : null,
-							rs.getInt("id"),
-							rs.getString("booktitle"),
-							rs.getString("username"));
-				rs.close();
-				stmt.close();
-				return fetchedTrans;
+//				Transaction fetchedTrans = new Transaction(	rs.getInt("userid"),
+//							rs.getInt("bookid"),
+//							LocalDate.parse(rs.getString("dateofborrow"), format),
+//							LocalDate.parse(rs.getString("expecteddateofreturn"), format),
+//							rs.getString("dateofreturn") != null? LocalDate.parse(rs.getString("dateofreturn"), format) : null,
+//							rs.getInt("id"),
+//							rs.getString("booktitle"),
+//							rs.getString("username"));
+//				rs.close();
+//				stmt.close();
+//				return fetchedTrans;
 			}
 			else{
 				rs.close();

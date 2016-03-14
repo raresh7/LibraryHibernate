@@ -9,7 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import appSpecs.AppSettings;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import appSpecs.DBServices;
 import entities.Book;
 import entities.User;
@@ -47,11 +50,19 @@ public class AddBook extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		DBServices services = new DBServices();
-		services.insertBook(	request.getParameter("title"),
+		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+
+		Book book = new Book(	request.getParameter("title"),
 								request.getParameter("author"),
 								request.getParameter("isbn"),
 								request.getParameter("state"));
+
+		session.save(book);
+		session.getTransaction().commit();
+		session.close();
+		sessionFactory.close();	
 		response.sendRedirect("newbook.jsp");
 	}
 

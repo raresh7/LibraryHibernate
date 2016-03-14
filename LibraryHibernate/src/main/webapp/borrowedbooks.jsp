@@ -36,7 +36,7 @@
 					<tbody>
 						<c:forEach var="obj" varStatus="status" items="${borrowedBooks}">
 								<tr>
-									<td>${obj.booktitle}</td>
+									<td>${obj.book.title}</td>
 									<td>${obj.dateOfBorrow}</td>
 									<td>${obj.expectedDateOfReturn}</td>
 									<c:if test="${all eq true}">

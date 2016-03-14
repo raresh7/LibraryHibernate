@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>LibraryApp</groupId>
-  <artifactId>LibraryJdbc</artifactId>
+  <artifactId>LibraryHibernate</artifactId>
   <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <name>LibraryJdbc Maven Webapp</name>
+  <name>LibraryHibernate Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -29,9 +29,15 @@
 		<artifactId>postgresql</artifactId>
 		<version>9.4-1206-jdbc42</version>
 	</dependency>	
+	<dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-ehcache</artifactId>
+		<version>5.1.0.Final</version>
+	</dependency>
+
   </dependencies>
   <build>
-    <finalName>LibraryJdbc</finalName>
+    <finalName>LibraryHibernate</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

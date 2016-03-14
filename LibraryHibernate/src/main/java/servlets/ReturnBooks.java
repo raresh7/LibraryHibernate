@@ -3,6 +3,7 @@ package servlets;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import appSpecs.AppSettings;
-import appSpecs.DBServices;
 import entities.Transaction;
 import entities.User;
 
@@ -40,8 +39,8 @@ public class ReturnBooks extends HttpServlet {
 		User user;
 		user = (User)session.getAttribute("loggedUser");
 		if(user.getIsAdmin()){
-			DBServices services = new DBServices();
-			List<Transaction> validTrans = services.selectTransActive();
+			
+			List<Transaction> validTrans = Transaction.getAllActive();
 			request.setAttribute("trans", validTrans);
 			request.getRequestDispatcher("returnbook.jsp").forward(request, response);
 		}
@@ -56,17 +55,18 @@ public class ReturnBooks extends HttpServlet {
 		if(request.getParameter("dateOfReturn").length() >= 8 && request.getParameterValues("receive")!=null){
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyy");
 			LocalDate date = LocalDate.parse(request.getParameter("dateOfReturn"), format);
-			String[] ids = request.getParameterValues("receive");
-			DBServices services = new DBServices();
-			for(int i=0;i<ids.length;i++){
-				System.out.println(ids[i] + " - " + date);
-				services.receiveBook(Integer.parseInt(ids[i]), date);
+			String[] idString = request.getParameterValues("receive");
+			List <Integer> ids = new ArrayList<Integer>();
+			for(int i=0;i<idString.length;i++){
+				ids.add(Integer.parseInt(idString[i]));
+				System.out.println(ids.get(i) + " - " + date);
 			}
+			Transaction.returnBooks(ids, date);
 			response.sendRedirect("returnbooks");
 			
 		}
-		else
-			{request.setAttribute("msg", "Please select the received books!");
+		else{
+			request.setAttribute("msg", "Please select the received books!");
 			request.getRequestDispatcher("returnbook.jsp").forward(request, response);
 			}
 	

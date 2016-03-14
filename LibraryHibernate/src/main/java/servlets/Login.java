@@ -1,8 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import appSpecs.AppSettings;
-import appSpecs.DBServices;
 import entities.User;
 
 /**
@@ -44,14 +41,13 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		HttpSession session = request.getSession();
-		DBServices services = new DBServices();
-		List <User> users = new ArrayList<User>(); 
-		users = services.selectUserByName(request.getParameter("user"));
-		if(users.size() == 1){
+		HttpSession session = request.getSession(); 
+		User user;
+		user = User.getUser(request.getParameter("user"));
+		if(user != null){
 			AppSettings appSettings = new AppSettings();
 			session.setAttribute("appSettings", appSettings);
-			session.setAttribute("loggedUser", users.get(0));
+			session.setAttribute("loggedUser", user);
 		}
 		else{
 			System.out.println("no user");

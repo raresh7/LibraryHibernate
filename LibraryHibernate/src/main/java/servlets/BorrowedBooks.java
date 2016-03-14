@@ -44,16 +44,15 @@ public class BorrowedBooks extends HttpServlet {
 		else
 		{
 			List<Transaction> borrowed = new ArrayList<Transaction>();
-			DBServices services = new DBServices();
 			Boolean all;
 			
 			if(request.getParameter("all") != null){
 				all = true;		
-				borrowed = services.selectAllBorrowedByUser(((User)session.getAttribute("loggedUser")).getId());
+				borrowed = ((User)session.getAttribute("loggedUser")).getTransaction();
 			}
 			else{
 				all = false;				
-				borrowed = services.selectActiveBorrowedByUser(((User)session.getAttribute("loggedUser")).getId());
+				borrowed = Transaction.returnActiveTrans(((User)session.getAttribute("loggedUser")).getTransaction());
 				}
 			
 			request.setAttribute("all", all);

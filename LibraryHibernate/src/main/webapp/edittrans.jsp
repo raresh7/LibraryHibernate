@@ -38,14 +38,14 @@
 					<label style="width:80px">User: </label>
 						<select name="user">
 							<c:forEach var="obj" varStatus="status" items="${users}">
-								<option value="${obj.id}" <c:if test="${obj.id == trans.userid}"> <c:out value="selected"/> </c:if>>${obj.name}</option>							
+								<option value="${obj.id}" <c:if test="${obj.id == trans.user.id}"> <c:out value="selected"/> </c:if>>${obj.name}</option>							
 							</c:forEach>
 						</select>
 						<br/>
 						<label style="width:80px">Book: </label>
 						<select name="book">
 							<c:forEach var="obj" varStatus="status" items="${books}">
-								<option value="${obj.id}" <c:if test="${obj.id == trans.bookid}"> <c:out value="selected"/> </c:if>>${obj.title}</option>							
+								<option value="${obj.id}" <c:if test="${obj.id == trans.book.id}"> <c:out value="selected"/> </c:if>>${obj.title}</option>							
 							</c:forEach>
 						</select>
 						<br/>

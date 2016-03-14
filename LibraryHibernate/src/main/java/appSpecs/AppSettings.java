@@ -1,7 +1,5 @@
 package appSpecs;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,41 +53,9 @@ public class AppSettings {
 		return tabs;
 	}
 	
-	private List<User> initUsers(){
-		List<User> users = new ArrayList<User>();
-		int i;
-		for(i = 0; i<10; i++){
-			users.add(new User("user"+i,"12345"+i,"street X, no." + i, i+1, false));
-		}
-		
-		users.add(new User("admin","adminSSN","library", i+1, true));
-		
-		return users;
-	}
 	
-	private List<Book> initBooks(){
-		List<Book> books = new ArrayList<Book>();
-		for(int i = 0; i<10; i++)
-			books.add(new Book("Book of "+(100-i),"Author - "+i,"abcdef-4" + i, "good", i+1));
-		return books;
-	}
-	
-	private List<Transaction> initTrans(){
-		List<Book> books = getBooks();
-		List<User> users = getUsers();
-		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyy");
-		
-		List<Transaction> trans = new ArrayList<Transaction>();
-		for(int i=0;i<8;i++){
-			//trans.add(new Transaction(users.get(8), books.get(i), LocalDate.parse("11.11.2015", format), LocalDate.parse("11.12.2015", format), i+1));
-		}	
-		return trans;
-	}
 	public AppSettings(){
-//		this.books = initBooks();
 		this.tabs = initTabs();
-//		this.users = initUsers();
-//		this.trans = initTrans();	
 	}
 	
 	public User getUserById(int id){
