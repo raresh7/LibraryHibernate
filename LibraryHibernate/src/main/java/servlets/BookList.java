@@ -16,6 +16,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import appSpecs.DBServices;
+import dao.BookService;
+import dao.BookServiceImpl.BookServiceImpl;
 import entities.Book;
 import entities.User;
 
@@ -56,7 +58,8 @@ public class BookList extends HttpServlet {
 				hsession.close();
 				sessionFactory.close();			
 			}
-			List <Book> books =  Book.getAll(); 
+			BookService book = new BookServiceImpl();
+			List <Book> books =  book.getAll(); 
 			request.setAttribute("books", books);
 			request.getRequestDispatcher("allbooks.jsp").forward(request, response);
 		

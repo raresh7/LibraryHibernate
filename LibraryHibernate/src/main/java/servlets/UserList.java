@@ -14,6 +14,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import dao.UserService;
+import dao.UserServiceImpl.UserServiceFactory;
 import entities.User;
 
 /**
@@ -55,7 +57,8 @@ public class UserList extends HttpServlet {
 				hsession.close();
 				sessionFactory.close();			
 			}
-			List <User> users =  User.getAll(); 
+			UserService userService = UserServiceFactory.getLocalUserService();
+			List <User> users =  userService.getAll(); 
 			request.setAttribute("users", users);
 			request.getRequestDispatcher("allusers.jsp").forward(request, response);
 		

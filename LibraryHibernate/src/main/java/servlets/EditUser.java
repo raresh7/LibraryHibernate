@@ -13,7 +13,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import appSpecs.DBServices;
+import dao.UserService;
+import dao.UserServiceImpl.UserServiceFactory;
 import entities.User;
 
 /**
@@ -42,8 +43,8 @@ public class EditUser extends HttpServlet {
 			response.sendRedirect("index.jsp");
 		else
 		{	
-			
-			User user = User.getUser(Integer.parseInt(request.getParameter("id")));
+			UserService userService = UserServiceFactory.getPocUserService();
+			User user = userService.getUser(Integer.parseInt(request.getParameter("id")));
 			request.setAttribute("user", user);
 			request.getRequestDispatcher("edituser.jsp").forward(request, response);
 		}

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import appSpecs.AppSettings;
+import dao.UserService;
+import dao.UserServiceImpl.UserServiceFactory;
 import entities.User;
 
 /**
@@ -43,7 +45,8 @@ public class Login extends HttpServlet {
 		
 		HttpSession session = request.getSession(); 
 		User user;
-		user = User.getUser(request.getParameter("user"));
+		UserService userService = UserServiceFactory.getPicUserService();
+		user = userService.getUser(request.getParameter("user"));
 		if(user != null){
 			AppSettings appSettings = new AppSettings();
 			session.setAttribute("appSettings", appSettings);

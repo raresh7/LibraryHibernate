@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dao.TransactionService;
+import dao.TransactionServiceImpl.TransactionServiceImpl;
 import entities.Transaction;
 import entities.User;
 
@@ -39,12 +41,13 @@ public class LentBooks extends HttpServlet {
 			response.sendRedirect("index.jsp");
 		else
 		{
+		    TransactionService transService = new TransactionServiceImpl();
 			if(request.getParameter("delete") != null){
 				System.out.println(request.getParameter("delete"));
-				Transaction.deleteTransaction(Integer.parseInt(request.getParameter("delete")));
+				transService.deleteTransaction(Integer.parseInt(request.getParameter("delete")));
 			}
 			
-				List <Transaction> trans = Transaction.getAll();
+				List <Transaction> trans = transService.getAll();
 				request.setAttribute("trans", trans);
 				request.getRequestDispatcher("lentbooks.jsp").forward(request, response);
 			}	

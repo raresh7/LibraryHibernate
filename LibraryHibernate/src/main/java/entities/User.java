@@ -34,7 +34,7 @@ public class User {
 	private String address;
 	private Boolean isAdmin;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy="user")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy="user")
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private List<Transaction> transaction = new ArrayList<Transaction>();
 	
@@ -85,34 +85,6 @@ public class User {
 		this.isAdmin = isAdmin;
 	}
 	
-	public static User getUser(String name){
-		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();   
-		Session session = sessionFactory.openSession();
-		User user = (User) session.createCriteria( User.class ).add( Restrictions.eq("name", name) ).uniqueResult();
-		session.close();
-		return user;
-
-		}
-	
-	public static List<User> getAll(){
-		List <User> users = new ArrayList<User>();
-		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();   
-		Session session = sessionFactory.openSession();
-		Query qry = session.createQuery("FROM User");
-		users = (List<User>)qry.list();
-		session.close();
-		return users;
-
-		}
-
-	public static User getUser(int id){
-		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();   
-		Session session = sessionFactory.openSession();
-		User user = (User) session.createCriteria( User.class ).add( Restrictions.eq("id", id)).uniqueResult();
-		session.close();
-		return user;
-
-		}
 	public List<Transaction> getTransaction() {
 		return transaction;
 	}

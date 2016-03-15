@@ -34,7 +34,7 @@ public class Book {
 	private String isbn;
 	private String state;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy="book")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy="book")
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private List<Transaction> transaction = new ArrayList<Transaction>();
 	
@@ -68,25 +68,6 @@ public class Book {
 		//nextId = id + 1;
 	}
 	
-	public static List<Book> getAll(){
-		List <Book> books = new ArrayList<Book>();
-		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();   
-		Session session = sessionFactory.openSession();
-		Query qry = session.createQuery("FROM Book");
-		books = (List<Book>)qry.list();
-		session.close();
-		return books;
-
-		}
-	public static Book getBook(int id){
-		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();   
-		Session session = sessionFactory.openSession();
-		Book book = (Book) session.createCriteria( Book.class ).add( Restrictions.eq("id", id)).uniqueResult();
-		session.close();
-		return book;
-
-		}
-	
 	public int getId() {
 		return id;
 	}
@@ -104,15 +85,5 @@ public class Book {
 	}
 	public void setTransaction(List<Transaction> transaction) {
 		this.transaction = transaction;
-	}
-	public static List<Book> getAvailableBooks(){
-		List <Book> books = new ArrayList<Book>();
-		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();   
-		Session session = sessionFactory.openSession();
-		Query qry = session.createQuery("FROM Book b"
-				+ "							WHERE b.id NOT IN (SELECT book FROM Transaction WHERE dateofreturn is null)");
-		books = (List<Book>)qry.list();
-		session.close();
-		return books;
 	}
 }

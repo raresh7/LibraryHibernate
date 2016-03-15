@@ -39,7 +39,7 @@ public class TesterClass {
 //		session.save(user2);
 		
 		
-		System.out.println(Book.getAvailableBooks().size());
+//		System.out.println(Book.getAvailableBooks().size());
 		
 		
 		session.getTransaction().commit();

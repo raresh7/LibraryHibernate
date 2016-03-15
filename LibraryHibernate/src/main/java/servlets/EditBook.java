@@ -14,6 +14,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import appSpecs.DBServices;
+import dao.BookService;
+import dao.BookServiceImpl.BookServiceImpl;
 import entities.Book;
 import entities.User;
 
@@ -43,7 +45,8 @@ public class EditBook extends HttpServlet {
 			response.sendRedirect("index.jsp");
 		else
 		{
-			Book book = Book.getBook(Integer.parseInt(request.getParameter("id")));
+		    BookService bookService = new BookServiceImpl();
+			Book book = bookService.getBook(Integer.parseInt(request.getParameter("id")));
 			request.setAttribute("book", book);
 			request.getRequestDispatcher("editbooks.jsp").forward(request, response);
 		}

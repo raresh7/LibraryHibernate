@@ -17,7 +17,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import appSpecs.DBServices;
+import dao.BookService;
+import dao.TransactionService;
+import dao.UserService;
+import dao.BookServiceImpl.BookServiceImpl;
+import dao.TransactionServiceImpl.TransactionServiceImpl;
+import dao.UserServiceImpl.UserServiceFactory;
 import entities.Book;
 import entities.Transaction;
 import entities.User;
@@ -49,12 +54,16 @@ public class EditTrans extends HttpServlet {
 			response.sendRedirect("index.jsp");
 		else
 		{
-			Transaction trans = Transaction.getTransaction(Integer.parseInt(request.getParameter("id")));
+		    TransactionService transService = new TransactionServiceImpl();
+		    UserService userService = UserServiceFactory.getPocUserService();
+		    BookService bookService = new BookServiceImpl();
+			Transaction trans = transService.getTransaction(Integer.parseInt(request.getParameter("id")));
+			
 			System.out.println(trans);
 			request.setAttribute("trans", trans);
-			request.setAttribute("users", User.getAll());
+			request.setAttribute("users", userService.getAll());
 			List <Book> books = new ArrayList<Book>();
-			books = Book.getAvailableBooks();
+			books = bookService.getAvailableBooks();
 			books.add(trans.getBook());
 			request.setAttribute("books", books);
 			request.getRequestDispatcher("edittrans.jsp").forward(request, response);
@@ -71,8 +80,10 @@ public class EditTrans extends HttpServlet {
 		Session hsession = sessionFactory.openSession();
 		hsession.beginTransaction();
 		Transaction trans = hsession.get(Transaction.class, Integer.parseInt(request.getParameter("id")));
-		trans.setBook(Book.getBook(Integer.parseInt(request.getParameter("book"))));
-		trans.setUser(User.getUser(Integer.parseInt(request.getParameter("user"))));
+		BookService bookService = new BookServiceImpl();
+		UserService userService = UserServiceFactory.getLocalUserService();
+		trans.setBook(bookService.getBook(Integer.parseInt(request.getParameter("book"))));
+		trans.setUser(userService.getUser(Integer.parseInt(request.getParameter("user"))));
 		trans.setDateOfBorrow(LocalDate.parse(request.getParameter("dateOfBorrow"), format));
 		trans.setExpectedDateOfReturn(LocalDate.parse(request.getParameter("expectedDateOfReturn"), format));
 		hsession.getTransaction().commit();

@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dao.TransactionService;
+import dao.TransactionServiceImpl.TransactionServiceImpl;
 import entities.Transaction;
 import entities.User;
 
@@ -39,8 +41,8 @@ public class ReturnBooks extends HttpServlet {
 		User user;
 		user = (User)session.getAttribute("loggedUser");
 		if(user.getIsAdmin()){
-			
-			List<Transaction> validTrans = Transaction.getAllActive();
+			TransactionService transService = new TransactionServiceImpl();
+			List<Transaction> validTrans = transService.getAllActive();
 			request.setAttribute("trans", validTrans);
 			request.getRequestDispatcher("returnbook.jsp").forward(request, response);
 		}
@@ -61,7 +63,8 @@ public class ReturnBooks extends HttpServlet {
 				ids.add(Integer.parseInt(idString[i]));
 				System.out.println(ids.get(i) + " - " + date);
 			}
-			Transaction.returnBooks(ids, date);
+			TransactionService transService = new TransactionServiceImpl();
+			transService.returnBooks(ids, date);
 			response.sendRedirect("returnbooks");
 			
 		}

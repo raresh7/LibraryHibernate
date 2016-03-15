@@ -17,7 +17,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import appSpecs.DBServices;
+import dao.BookService;
+import dao.BookServiceImpl.BookServiceImpl;
+import dao.UserServiceImpl.UserServiceFactory;
 import entities.Book;
 import entities.Transaction;
 import entities.User;
@@ -43,12 +45,14 @@ public class AddTrans extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user;
+		List <User> users = UserServiceFactory.getPocUserService().getAll();
 		user = (User)session.getAttribute("loggedUser");
 		if(user.getIsAdmin()){
+		    BookService book = new BookServiceImpl();
 			List <Book> avBooks = new ArrayList<Book>();
-			avBooks = Book.getAvailableBooks();
+			avBooks = book.getAvailableBooks();
 			request.setAttribute("books", avBooks);
-			request.setAttribute("users", User.getAll());
+			request.setAttribute("users", users);
 			request.getRequestDispatcher("newtrans.jsp").forward(request, response);
 		}
 	}
@@ -58,11 +62,12 @@ public class AddTrans extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyy");
+		BookService book = new BookServiceImpl();
 		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 		Session hsession = sessionFactory.openSession();
 		hsession.beginTransaction();
-		Transaction trans = new Transaction(User.getUser(Integer.parseInt(request.getParameter("user"))),
-											Book.getBook(Integer.parseInt(request.getParameter("book"))),
+		Transaction trans = new Transaction(UserServiceFactory.getPicUserService().getUser(Integer.parseInt(request.getParameter("user"))),
+											book.getBook(Integer.parseInt(request.getParameter("book"))),
 											LocalDate.parse(request.getParameter("dateOfBorrow"), format),
 											LocalDate.parse(request.getParameter("expectedDateOfReturn"), format));
 		hsession.save(trans);
